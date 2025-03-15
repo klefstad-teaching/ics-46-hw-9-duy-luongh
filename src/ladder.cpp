@@ -14,19 +14,28 @@ bool edit_distance_within(const std::string &str1, const std::string &str2, int 
     if (abs(len1 - len2) > d)
         return false;
 
+    // for all i and j, a[i,j] will hold the Levenshtein distance between
+    // the first i characters of str1 and the first j characters of str2
     vector<vector<int>> a(len1 + 1, vector<int>(len2 + 1));
+    // source prefixes can be transformed into empty string by
+    // dropping all characters
     for (int i = 0; i <= len1; ++i)
         a[i][0] = i;
+    // target prefixes can be reached from empty source prefix
+    // by inserting every character
     for (int j = 0; j <= len2; ++j)
         a[0][j] = j;
 
-    for (int i = 1; i <= len1; ++i)
-        for (int j = 1; j <= len2; ++j)
+    for (int j = 1; j <= len2; ++j)
+        for (int i = 1; j <= len1; ++i)
         {
-            if (str1[i - 1] == str2[j - 1])
-                a[i][j] = a[i - 1][j - 1];
-            else
-                a[i][j] = min({a[i - 1][j] + 1, a[i][j - 1] + 1, a[i - 1][j - 1] + 1});
+            int substitution_cost = 0;
+            if (str1[i - 1] != str2[j - 1])
+                substitution_cost = 1;
+
+            a[i][j] = min({a[i - 1][j] + 1,                       // deletion
+                           a[i][j - 1] + 1,                       // insertion
+                           a[i - 1][j - 1] + substitution_cost}); // substitution
         }
 
     return a[len1][len2] <= d;

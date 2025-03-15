@@ -3,7 +3,7 @@
 
 void error(string word1, string word2, string msg)
 {
-    cerr << msg << endl;
+    cerr << msg << word1 << " " << word2 << endl;
     exit(1);
 }
 
@@ -15,7 +15,7 @@ bool edit_distance_within(const std::string &str1, const std::string &str2, int 
     if (abs(len1 - len2) > d)
         return false;
 
-    int a[len1 + 1][len2 + 1];
+    vector<vector<int>> a(len1 + 1, vector<int>(len2 + 1));
     for (int i = 0; i <= len1; ++i)
         a[i][0] = i;
     for (int j = 0; j <= len2; ++j)
@@ -99,8 +99,12 @@ void print_word_ladder(const vector<string> &ladder)
     }
 }
 
-#define my_assert(e) {cout << #e << ((e) ? " passed": " failed") << endl;}
-void verify_word_ladder() {
+#define my_assert(e)                                         \
+    {                                                        \
+        cout << #e << ((e) ? " passed" : " failed") << endl; \
+    }
+void verify_word_ladder()
+{
     set<string> word_list;
     load_words(word_list, "../src/words.txt");
     my_assert(generate_word_ladder("cat", "dog", word_list).size() == 4);

@@ -56,7 +56,7 @@ vector<int> extract_shortest_path(const vector<int> &distances, const vector<int
 {
     // If there's no path to destination
     if (previous[destination] == -1)
-        return vector<int>();
+        return vector<int>({destination});
 
     vector<int> result;
     int u = destination;

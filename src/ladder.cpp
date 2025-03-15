@@ -42,7 +42,7 @@ vector<string> generate_word_ladder(const string &begin_word, const string &end_
     if (begin_word == end_word)
     {
         error(begin_word, end_word, "Error: begin and end words are the same!");
-        return;
+        return vector<string>();
     }
 
     queue<vector<string>> ladder_queue;
@@ -100,7 +100,10 @@ void print_word_ladder(const vector<string> &ladder)
         cout << ladder[i] << " ";
 }
 
-#define my_assert(e) { cout << #e << ((e) ? " passed" : " failed") << endl; }
+#define my_assert(e)                                         \
+    {                                                        \
+        cout << #e << ((e) ? " passed" : " failed") << endl; \
+    }
 void verify_word_ladder()
 {
     set<string> word_list;

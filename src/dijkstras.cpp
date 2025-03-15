@@ -55,7 +55,7 @@ vector<int> dijkstra_shortest_path(const Graph &G, int source, vector<int> &prev
 vector<int> extract_shortest_path(const vector<int> &distances, const vector<int> &previous, int destination)
 {
     vector<int> result;
-    int u = previous[destination];
+    int u = destination;
     result.push_back(u);
 
     while (u != 0)

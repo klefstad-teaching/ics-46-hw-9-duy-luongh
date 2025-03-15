@@ -4,7 +4,6 @@
 void error(string word1, string word2, string msg)
 {
     cerr << msg << word1 << " " << word2 << endl;
-    exit(1);
 }
 
 bool edit_distance_within(const std::string &str1, const std::string &str2, int d)
@@ -41,7 +40,10 @@ bool is_adjacent(const string &word1, const string &word2)
 vector<string> generate_word_ladder(const string &begin_word, const string &end_word, const set<string> &word_list)
 {
     if (begin_word == end_word)
+    {
         error(begin_word, end_word, "Error: begin and end words are the same!");
+        return;
+    }
 
     queue<vector<string>> ladder_queue;
     vector<string> begin;
@@ -89,20 +91,16 @@ void load_words(set<string> &word_list, const string &file_name)
 void print_word_ladder(const vector<string> &ladder)
 {
     if (ladder.empty())
+    {
+        cout << "No word ladder found." << endl;
         return;
+    }
 
     for (size_t i = 0; i < ladder.size(); ++i)
-    {
-        cout << ladder[i];
-        if (i < ladder.size() - 1)
-            cout << " -> ";
-    }
+        cout << ladder[i] << " ";
 }
 
-#define my_assert(e)                                         \
-    {                                                        \
-        cout << #e << ((e) ? " passed" : " failed") << endl; \
-    }
+#define my_assert(e) { cout << #e << ((e) ? " passed" : " failed") << endl; }
 void verify_word_ladder()
 {
     set<string> word_list;

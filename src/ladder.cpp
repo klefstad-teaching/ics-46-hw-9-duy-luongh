@@ -27,7 +27,7 @@ bool edit_distance_within(const std::string &str1, const std::string &str2, int 
         a[0][j] = j;
 
     for (int j = 1; j <= len2; ++j)
-        for (int i = 1; j <= len1; ++i)
+        for (int i = 1; i <= len1; ++i)
         {
             int substitution_cost = 0;
             if (str1[i - 1] != str2[j - 1])

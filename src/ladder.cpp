@@ -27,7 +27,7 @@ bool edit_distance_within(const std::string &str1, const std::string &str2, int 
             if (str1[i - 1] == str2[j - 1])
                 a[i][j] = a[i - 1][j - 1];
             else
-                a[i][j] = std::min({a[i - 1][j] + 1, a[i][j - 1] + 1, a[i - 1][j - 1] + 1});
+                a[i][j] = min({a[i - 1][j] + 1, a[i][j - 1] + 1, a[i - 1][j - 1] + 1});
         }
 
     return a[len1][len2] <= d;
@@ -78,12 +78,37 @@ vector<string> generate_word_ladder(const string &begin_word, const string &end_
 
 void load_words(set<string> &word_list, const string &file_name)
 {
+    ifstream in(file_name);
+    if (!in.is_open())
+        error(NULL, NULL, "Error: Could not open file ");
+
+    for (string word; (in >> word);)
+        word_list.insert(word);
+
+    in.close();
 }
 
 void print_word_ladder(const vector<string> &ladder)
 {
+    if (ladder.empty())
+        return;
+
+    for (size_t i = 0; i < ladder.size(); ++i)
+    {
+        cout << ladder[i];
+        if (i < ladder.size() - 1)
+            cout << " -> ";
+    }
 }
 
-void verify_word_ladder()
-{
+#define my_assert(e) {cout << #e << ((e) ? " passed": " failed") << endl;}
+void verify_word_ladder() {
+    set<string> word_list;
+    load_words(word_list, "words.txt");
+    my_assert(generate_word_ladder("cat", "dog", word_list).size() == 4);
+    my_assert(generate_word_ladder("marty", "curls", word_list).size() == 6);
+    my_assert(generate_word_ladder("code", "data", word_list).size() == 6);
+    my_assert(generate_word_ladder("work", "play", word_list).size() == 6);
+    my_assert(generate_word_ladder("sleep", "awake", word_list).size() == 8);
+    my_assert(generate_word_ladder("car", "cheat", word_list).size() == 4);
 }

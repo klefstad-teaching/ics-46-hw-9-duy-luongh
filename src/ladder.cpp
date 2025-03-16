@@ -3,7 +3,7 @@
 
 void error(string word1, string word2, string msg)
 {
-    cerr << msg << word1 << " " << word2 << endl;
+    cerr << msg << " " << word1 << " " << word2 << endl;
 }
 
 bool edit_distance_within(const std::string &str1, const std::string &str2, int d)
@@ -61,6 +61,12 @@ vector<string> generate_word_ladder(const string &begin_word, const string &end_
         return vector<string>();
     }
 
+    if (word_list.find(end_word) == word_list.end())
+    {
+        error(begin_word, end_word, "Error: end word not in word_list!");
+        return vector<string>();
+    }
+
     queue<vector<string>> ladder_queue;
     ladder_queue.push({begin_word});
     set<string> visited;
@@ -93,6 +99,8 @@ vector<string> generate_word_ladder(const string &begin_word, const string &end_
 void load_words(set<string> &word_list, const string &file_name)
 {
     ifstream in(file_name);
+    if (!in)
+        throw runtime_error("Can't open input file");
 
     for (string word; (in >> word);)
         word_list.insert(word);

@@ -3,7 +3,7 @@
 int main()
 {
     Graph G;
-    file_to_graph("../src/small.txt", G);
+    file_to_graph("small.txt", G);
 
     vector<int> previous;
     vector<int> distances = dijkstra_shortest_path(G, 0, previous);

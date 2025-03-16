@@ -16,7 +16,7 @@ vector<int> dijkstra_shortest_path(const Graph &G, int source, vector<int> &prev
     vector<int> visited;
 
     distance.resize(n, INF);
-    previous.resize(n, -1);
+    previous.assign(n, -1);
     visited.resize(n, false);
 
     auto cmp = [](const Node &u, const Node &v)

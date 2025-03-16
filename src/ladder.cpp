@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <unordered_set>
 #include "ladder.h"
 
 void error(string word1, string word2, string msg)
@@ -50,24 +51,24 @@ vector<string> generate_word_ladder(const string &begin_word, const string &end_
 {
     if (begin_word == end_word)
     {
-        error(begin_word, end_word, "Error: begin and end words are the same!");
+        error(begin_word, end_word, "begin and end words are the same!");
         return vector<string>();
     }
 
     if (word_list.find(end_word) == word_list.end())
     {
-        error(begin_word, end_word, "Error: end word not in word_list!");
-        return vector<string>();
+        error(begin_word, end_word, "End word is not in the dictionary.");
+        return {};
     }
 
     queue<vector<string>> ladder_queue;
     ladder_queue.push({begin_word});
-    set<string> visited;
+    unordered_set<string> visited;
     visited.insert(begin_word);
 
     while (!ladder_queue.empty())
     {
-        vector<string> ladder = ladder_queue.front(); ladder_queue.pop();
+        vector<string> ladder = move(ladder_queue.front()); ladder_queue.pop();
         string last_word = ladder.back();
 
         for (const string &word : word_list)
@@ -81,7 +82,7 @@ vector<string> generate_word_ladder(const string &begin_word, const string &end_
                 if (word == end_word)
                     return new_ladder;
 
-                ladder_queue.push(new_ladder);
+                ladder_queue.push(move(new_ladder));
             }
         }
     }

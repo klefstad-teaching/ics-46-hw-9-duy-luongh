@@ -57,8 +57,8 @@ vector<string> generate_word_ladder(const string &begin_word, const string &end_
 
     if (word_list.find(end_word) == word_list.end())
     {
-        error(begin_word, end_word, "End word is not in the dictionary.");
-        return {};
+        error(begin_word, end_word, "end word is not in the dictionary!");
+        return vector<string>();
     }
 
     queue<vector<string>> ladder_queue;

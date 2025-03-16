@@ -13,14 +13,13 @@ vector<int> dijkstra_shortest_path(const Graph &G, int source, vector<int> &prev
 {
     int n = G.numVertices;
     vector<int> distance;
-    vector<int> visited;
+    vector<bool> visited;
 
     distance.resize(n, INF);
-    previous.assign(n, -1);
     visited.resize(n, false);
+    previous.assign(n, -1);
 
-    auto cmp = [](const Node &u, const Node &v)
-    { return u.weight > v.weight; };
+    auto cmp = [](const Node &u, const Node &v) { return u.weight > v.weight; };
     priority_queue<Node, vector<Node>, decltype(cmp)> pq(cmp);
     pq.push(Node(source, 0));
     distance[source] = 0;

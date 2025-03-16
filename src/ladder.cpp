@@ -14,31 +14,33 @@ bool edit_distance_within(const std::string &str1, const std::string &str2, int 
     if (abs(len1 - len2) > d)
         return false;
 
-    // for all i and j, a[i,j] will hold the Levenshtein distance between
-    // the first i characters of str1 and the first j characters of str2
-    vector<vector<int>> a(len1 + 1, vector<int>(len2 + 1));
-    // source prefixes can be transformed into empty string by
-    // dropping all characters
-    for (int i = 0; i <= len1; ++i)
-        a[i][0] = i;
-    // target prefixes can be reached from empty source prefix
-    // by inserting every character
+    vector<int> current_row(len2 + 1);
+    vector<int> prev_row(len2 + 1);
+
     for (int j = 0; j <= len2; ++j)
-        a[0][j] = j;
+        prev_row[j] = j;
 
-    for (int j = 1; j <= len2; ++j)
-        for (int i = 1; i <= len1; ++i)
+    for (int i = 1; i <= len1; ++i)
+    {
+        current_row[0] = i;
+        int min_val = i;
+
+        for (int j = 1; j <= len2; ++j)
         {
-            int substitution_cost = 0;
-            if (str1[i - 1] != str2[j - 1])
-                substitution_cost = 1;
-
-            a[i][j] = min({a[i - 1][j] + 1,                       // deletion
-                           a[i][j - 1] + 1,                       // insertion
-                           a[i - 1][j - 1] + substitution_cost}); // substitution
+            int substitution_cost = (str1[i - 1] == str2[j - 1]) ? 0 : 1;
+            current_row[j] = min({prev_row[j] + 1,
+                                  current_row[j - 1] + 1,
+                                  prev_row[j - 1] + substitution_cost});
+            min_val = min(min_val, current_row[j]);
         }
 
-    return a[len1][len2] <= d;
+        if (min_val > d)
+            return false;
+
+        prev_row = current_row;
+    }
+
+    return prev_row[len2] <= d;
 }
 
 bool is_adjacent(const string &word1, const string &word2)

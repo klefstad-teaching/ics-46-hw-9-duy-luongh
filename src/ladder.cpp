@@ -14,33 +14,38 @@ bool edit_distance_within(const std::string &str1, const std::string &str2, int 
     if (abs(len1 - len2) > d)
         return false;
 
-    vector<int> current_row(len2 + 1);
-    vector<int> prev_row(len2 + 1);
-
-    for (int j = 0; j <= len2; ++j)
-        prev_row[j] = j;
-
-    for (int i = 1; i <= len1; ++i)
+    int diff_count = 0;
+    int i = 0, j = 0;
+    while (i < len1 && j < len2)
     {
-        current_row[0] = i;
-        int min_val = i;
-
-        for (int j = 1; j <= len2; ++j)
+        if (str1[i] != str2[j])
         {
-            int substitution_cost = (str1[i - 1] == str2[j - 1]) ? 0 : 1;
-            current_row[j] = min({prev_row[j] + 1,
-                                  current_row[j - 1] + 1,
-                                  prev_row[j - 1] + substitution_cost});
-            min_val = min(min_val, current_row[j]);
+            ++diff_count;
+            if (diff_count > d)
+                return false;
+
+            // Deletion case (skip in str1)
+            if (len1 > len2)
+                i++;
+            // Insertion case (skip in str2)
+            else if (len2 > len1)
+                j++;
+            // Substitution case (skip both)
+            else
+            {
+                i++;
+                j++;
+            }
         }
-
-        if (min_val > d)
-            return false;
-
-        prev_row = current_row;
+        else
+        {
+            ++i;
+            ++j;
+        }
     }
 
-    return prev_row[len2] <= d;
+    diff_count += (len1 - i) + (len2 - j);
+    return diff_count <= d;
 }
 
 bool is_adjacent(const string &word1, const string &word2)
@@ -110,15 +115,15 @@ void print_word_ladder(const vector<string> &ladder)
     cout << endl;
 }
 
-// #define my_assert(e) { cout << #e << ((e) ? " passed" : " failed") << endl; }
-// void verify_word_ladder()
-// {
-//     set<string> word_list;
-//     load_words(word_list, "../src/words.txt");
-//     my_assert(generate_word_ladder("cat", "dog", word_list).size() == 4);
-//     my_assert(generate_word_ladder("marty", "curls", word_list).size() == 6);
-//     my_assert(generate_word_ladder("code", "data", word_list).size() == 6);
-//     my_assert(generate_word_ladder("work", "play", word_list).size() == 6);
-//     my_assert(generate_word_ladder("sleep", "awake", word_list).size() == 8);
-//     my_assert(generate_word_ladder("car", "cheat", word_list).size() == 4);
-// }
+#define my_assert(e) { cout << #e << ((e) ? " passed" : " failed") << endl; }
+void verify_word_ladder()
+{
+    set<string> word_list;
+    load_words(word_list, "../src/words.txt");
+    my_assert(generate_word_ladder("cat", "dog", word_list).size() == 4);
+    my_assert(generate_word_ladder("marty", "curls", word_list).size() == 6);
+    my_assert(generate_word_ladder("code", "data", word_list).size() == 6);
+    my_assert(generate_word_ladder("work", "play", word_list).size() == 6);
+    my_assert(generate_word_ladder("sleep", "awake", word_list).size() == 8);
+    my_assert(generate_word_ladder("car", "cheat", word_list).size() == 4);
+}
